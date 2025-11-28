@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Teacher Assignments</h2>
+        <a href="{% url 'assign_teacher_subject' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> New Assignment
+        </a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Teacher</th>
+                            <th>Subjects Assigned</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for teacher in teachers %}
+                        <tr>
+                            <td>{{ teacher.get_full_name }}</td>
+                            <td>
+    <span class="badge bg-primary rounded-pill">
+        {{ teacher.total_subjects }} subject(s)
+    </span>
+</td>
+                            <td>
+                                <a href="{% url 'teacher_assignments_detail' teacher.id %}" 
+                                   class="btn btn-sm btn-info">
+                                    <i class="bi bi-eye"></i> View Details
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center">No teacher assignments found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

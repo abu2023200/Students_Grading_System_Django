@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block page_title %}My Classes and Subjects{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header">
+                <h5>My Classes and Subjects</h5>
+                <p>Select a subject to assign grades</p>
+            </div>
+            <div class="card-body">
+                {% for class_info in class_data %}
+                <div class="mb-4">
+                    <h5>{{ class_info.class_name }} (ID: {{ class_info.class_id }})</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for subject in class_info.subjects %}
+                        <a href="{% url 'add_grade_for_class_subject' class_info.class_id subject.id %}" 
+                           class="btn-primary" style="color: yellow;">
+                            {{ subject.name }} (ID: {{ subject.id }})
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="alert alert-info">
+                    You haven't been assigned to any classes or subjects yet.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

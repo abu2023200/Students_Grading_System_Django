@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    
+    {% if user.user_type == 'admin' %}
+    <div class="col-md-3 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ total_students }}</h4>
+                        <p>Total Students</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-user-graduate fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ total_teachers }}</h4>
+                        <p>Total Teachers</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-chalkboard-teacher fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ total_classes }}</h4>
+                        <p>Total Classes</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-school fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4>{{ total_subjects }}</h4>
+                        <p>Total Subjects</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-book fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if user.user_type == 'teacher' %}
+    <div class="col-md-12">        
+        <div class="card-body" style="background-color: #e9e9ec;">
+        <div class="card">
+            <div class="card-header">
+                <h5>Your Assigned Subjects</h5>
+            </div>
+            <div class="card-body">
+                {% if assigned_subjects %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Class</th>
+                             </tr>
+                        </thead>
+                        <tbody>
+                            {% for assignment in assigned_subjects %}
+                            <tr>
+                                <td>{{ assignment.subject.name }}</td>
+                                <td>{{ assignment.class_assigned.name }}</td>
+                                 
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p>No subjects assigned yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if user.user_type == 'student' %}
+<div class="col-md-12">
+    <div class="card shadow-lg mb-4 border-0" style="border-radius: 15px;">
+        <div class="card-header bg-gradient-primary text-white" style="border-radius: 15px 15px 0 0;">
+            <h5 class="mb-0">
+                <i class="fas fa-user-graduate mr-2"></i> 
+                My Academic Dashboard
+                <span class="float-end">
+                    <i class="fas fa-calendar-alt mr-1"></i>
+                    {{ current_year }}
+                </span>
+            </h5>
+        </div>
+        <div class="card-body" style="background-color: #e9e9ec;">
+            {% if student_class %}
+            <div class="mb-4">
+                <div class="alert alert-info shadow-sm" style="border-left: 5px solid #b51b1b;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">
+                                <i class="fas fa-users mr-2"></i> 
+                                Class Information
+                            </h6>
+                            <strong class="mr-2">
+                                <i class="fas fa-door-open text-primary"></i> 
+                                {{ student_class.class_assigned.name }}
+                            </strong>
+                        </div>
+                        <span class="badge bg-dark rounded-pill">
+                            <i class="far fa-calendar-check mr-1"></i>
+                            {{ student_class.date_assigned|date:"M Y" }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <h5 style="color: blue;">
+                <i class="fas fa-book-open text-primary mr-2"></i> 
+                My Subjects
+            </h5>
+            <div class="row">
+    {% for teacher_subject in subjects_in_class %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm" style="width: 320px; margin: 0 auto; border-radius: 12px; transition: all 0.3s ease;">
+            <div class="card-header d-flex justify-content-between align-items-center" 
+                 style="background: linear-gradient(135deg, #d7d5f9 0%, #c1f8f4 100%); border-radius: 12px 12px 0 0;">
+                <h5 class="mb-0 text-primary">
+                    <i class="fas fa-book mr-2"></i>
+                    {{ teacher_subject.subject.name }}
+                </h5>
+                {% if teacher_subject.has_new_content %}
+                <span class="badge bg-danger rounded-pill pulse">
+                    <i class="fas fa-bell mr-1"></i> New
+                </span>
+                {% endif %}
+            </div>
+            <div class="card-body" style="background-color: #f9fcfc; border-radius: 0 0 12px 12px;">
+                <div class="mb-3">
+                    <h6 class="text-secondary">
+                        <i class="fas fa-chalkboard-teacher text-info mr-2"></i> 
+                        Teacher
+                    </h6>
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-user-tie mr-2 text-muted"></i>
+                                <strong>{{ teacher_subject.teacher.get_full_name }}</strong>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-envelope mr-2 text-muted"></i>
+                                <small>{{ teacher_subject.teacher.email }}</small>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-phone mr-2 text-muted"></i>
+                                <small>{{ teacher_subject.teacher.phone|default:"Not provided" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-end mt-3">
+                    <small class="text-muted">
+                        <i class="fas fa-hashtag mr-1"></i>
+                        {{ teacher_subject.subject.code }}
+                    </small>
+                    <a href="{% url 'subject_grades' teacher_subject.subject.id %}" 
+                       class="btn btn-sm btn-outline-primary rounded-pill">
+                        <i class="fas fa-chart-line mr-1"></i> View Grades
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-warning">
+            No subjects are currently assigned to your class.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <a href="{% url 'student_results' %}" class="btn btn-primary rounded-pill shadow">
+                    <i class="fas fa-poll mr-2"></i> View My Result
+                </a>
+                <a href="{% url 'download_result_pdf' %}" class="btn btn-success rounded-pill shadow">
+                    <i class="fas fa-file-download mr-2"></i> Download Result
+                </a>
+            </div>
+            {% else %}
+            <div class="alert alert-warning shadow-sm">
+                <i class="fas fa-user-slash mr-2"></i> 
+                You are not assigned to any class yet. Please contact the administrator.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<style>
+    .pulse {
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    }
+</style>
+</div>
+{% endblock %}

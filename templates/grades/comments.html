@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">Comments</h2>
+            
+            <!-- Tabs Navigation -->
+            <ul class="nav nav-tabs" id="commentsTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="received-tab" data-bs-toggle="tab" data-bs-target="#received" type="button" role="tab">
+                        Received Comments ({{ received_comments.count }})
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="sent-tab" data-bs-toggle="tab" data-bs-target="#sent" type="button" role="tab">
+                        Sent Comments ({{ sent_comments.count }})
+                    </button>
+                </li>
+            </ul>
+            
+            <!-- Tab Content -->
+            <div class="tab-content p-3 border border-top-0 rounded-bottom" id="commentsTabContent">
+                <!-- Received Comments Tab -->
+                <div class="tab-pane fade show active" id="received" role="tabpanel">
+                    {% if received_comments %}
+                        <div class="list-group">
+                            {% for comment in received_comments %}
+                            <div class="list-group-item mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="mb-1">From: {{ comment.sender.get_full_name }}</h5>
+                                    <small class="text-muted">{{ comment.created_at|date:"M d, Y H:i" }}</small>
+                                </div>
+                                <p class="mb-1"><strong>Subject:</strong> {{ comment.subject.name }}</p>
+                                <p class="mb-1">{{ comment.message }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">No received comments yet.</div>
+                    {% endif %}
+                </div>
+                
+                <!-- Sent Comments Tab -->
+                <div class="tab-pane fade" id="sent" role="tabpanel">
+                    {% if sent_comments %}
+                        <div class="list-group">
+                            {% for comment in sent_comments %}
+                            <div class="list-group-item mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="mb-1">To: {{ comment.receiver.get_full_name }}</h5>
+                                    <small class="text-muted">{{ comment.created_at|date:"M d, Y H:i" }}</small>
+                                </div>
+                                <p class="mb-1"><strong>Subject:</strong> {{ comment.subject.name }}</p>
+                                <p class="mb-1">{{ comment.message }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">No sent comments yet.</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Add Comment Button -->
+            <div class="mt-3">
+                <a href="{% url 'add_comment' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add New Comment
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize Bootstrap tabs
+    var tabElms = [].slice.call(document.querySelectorAll('button[data-bs-toggle="tab"]'));
+    tabElms.forEach(function(tabEl) {
+        new bootstrap.Tab(tabEl);
+    });
+</script>
+{% endblock %}

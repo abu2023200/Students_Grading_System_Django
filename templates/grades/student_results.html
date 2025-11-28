@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block page_title %} 
+{% if request.user.user_type == 'student' %} 
+My Results {% else %} Student Results 
+{% endif %} 
+{% endblock %} 
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Academic Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h6>Total Subjects</h6>
+                        <h4>{{ student_result.total_subjects }}</h4>
+                    </div>
+                    <div class="col-md-3">
+                        <h6>Average Score</h6>
+                        <h4>{{ student_result.average_score|floatformat:2 }}%</h4>
+                    </div>
+                    <div class="col-md-3">
+                        <h6></h6>
+                        <h4 class="grade-{{ student_result.overall_grade }}">{{ student_result.overall_grade }}</h4>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{% url 'download_result_pdf' %}" class="btn btn-success">
+                            <i class="fas fa-download"></i> Download PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>Subject Grades</h5>
+            </div>
+            <div class="card-body">
+                {% if grades %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Test Score</th>
+                                <th>Exam Score</th>
+                                 <th>Teacher</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for grade in grades %}
+                            <tr>
+                                <td>{{ grade.subject.name }}</td>
+                                <td>{{ grade.test_score }}</td>
+                                <td>{{ grade.exam_score }}</td>
+                                 <td>{{ grade.teacher.get_full_name }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p>No grades available yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

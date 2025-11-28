@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">Confirm User Deletion</h3>
+                </div>
+                <div class="card-body text-center">
+                    <h5 class="card-title">Are you sure you want to delete this user?</h5>
+                    <p class="card-text">
+                        <strong>{{ user.get_full_name }}</strong> ({{ user.email }})
+                        <br>
+                        <span class="badge bg-secondary">{{ user.get_user_type_display }}</span>
+                    </p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Confirm Delete
+                        </button>
+                        <a href="{% url 'manage_users' %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

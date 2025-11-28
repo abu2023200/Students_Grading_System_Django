@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4>{{ subject.name }} Grades</h4>
+            <small>Subject Code: {{ subject.code }}</small>
+        </div>
+        <div class="card-body">
+            {% if grades %}
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Test Score</th>
+                        <th>Exam Score</th>
+                        <th>Total Score</th>
+                         <th>Date Recorded</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for grade in grades %}
+                    <tr>
+                        <td>{{ grade.test_score }}</td>
+                        <td>{{ grade.exam_score }}</td>
+                        <td>{{ grade.total_score }}</td>
+                        <td>{{ grade.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-info">
+                No grades recorded yet for this subject.
+            </div>
+            {% endif %}
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary mt-3">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
